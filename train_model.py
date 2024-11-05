@@ -76,7 +76,7 @@ lr_scheduler = ReduceLROnPlateau(
 history = model.fit(
     train_data,
     validation_data=val_data,
-    epochs=50,
+    epochs=100,
     callbacks=[early_stopping, lr_scheduler]
 )
 
