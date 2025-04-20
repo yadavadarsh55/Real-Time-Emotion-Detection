@@ -1,144 +1,283 @@
-# Real-Time Emotion Detection with Face Mesh
+# Real-Time-Emotion-Detection
 
-A Python application that performs real-time emotion detection using your webcam. The project combines MediaPipe's face mesh tracking with a deep learning model to detect seven different emotional states while displaying an elegant face mesh overlay.
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE.md)
+[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange.svg)](https://www.tensorflow.org/)
+[![MediaPipe](https://img.shields.io/badge/MediaPipe-0.8+-green.svg)](https://mediapipe.dev/)
+[![Flask](https://img.shields.io/badge/Flask-2.x-lightgrey.svg)](https://flask.palletsprojects.com/)
+[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-yellow.svg)](https://developer.chrome.com/docs/extensions/)
+
+A real-time facial emotion detection system with engagement analysis using deep learning and computer vision techniques, accessible through both a standalone application and a Chrome extension.
+
+## Overview
+
+Real-Time-Emotion-Detection detects and analyzes facial emotions to determine user engagement levels in real-time. The system processes video input to recognize seven distinct emotions and calculates an overall engagement score based on multiple facial features including emotion, smile detection, head position, and gaze direction.
+
+![Emotion Detection Demo](https://via.placeholder.com/640x360.png?text=Emotion+Detection+Demo)
 
 ## Features
-* Real-time emotion detection (7 emotions)
-   * Angry
-   * Disgusted
-   * Fearful
-   * Happy
-   * Neutral
-   * Sad
-   * Surprised
-* Elegant face mesh visualization
-* Bounding box detection
-* Real-time emotion labeling
-* Smooth 30% opacity mesh overlay
-* Webcam support with 640x480 resolution
-* Model evaluation tools with confusion matrix visualization
 
-## Prerequisites
-```
-Python 3.7+
-OpenCV (cv2)
-TensorFlow
-MediaPipe
-NumPy
-Matplotlib
-scikit-learn
-```
+- **Real-time emotion recognition**: Detects 7 emotions (Angry, Disgusted, Fearful, Happy, Neutral, Sad, Surprised)
+- **Engagement analysis**: Calculates user engagement levels based on facial features
+- **Head position tracking**: Detects head tilts and movements
+- **Gaze detection**: Monitors eye gaze direction
+- **Smile detection**: Recognizes smile expressions
+- **Flask API server**: Backend service for web application integration
+- **Chrome extension**: Browser-based emotion and engagement analysis for video meetings
+
+## Emotions Detected
+
+- Angry (Score: 0.6)
+- Disgusted (Score: 0.1)
+- Fearful (Score: 0.4)
+- Happy (Score: 1.0)
+- Neutral (Score: 0.5/0.8)
+- Sad (Score: 0.2)
+- Surprised (Score: 0.8/0.9)
+
+## Technologies Used
+
+- **Python**: Core programming language
+- **TensorFlow/Keras**: Deep learning framework for emotion classification
+- **OpenCV**: Computer vision library for image processing
+- **MediaPipe**: Face mesh and landmark detection
+- **Flask**: Web server for API endpoints
+- **NumPy**: Numerical operations and array manipulation
+- **Chrome Extensions API**: Browser integration for video conferencing platforms
 
 ## Installation
+
+### Backend Setup
+
 1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/emotion-detection.git
-cd emotion-detection
-```
+   ```bash
+   git clone https://github.com/yadavadarsh55/Real-Time-Emotion-Detection.git
+   cd Real-Time-Emotion-Detection
+   ```
 
-2. Install required packages:
-```bash
-pip install opencv-python tensorflow mediapipe numpy matplotlib scikit-learn
-```
+2. Create and activate a virtual environment (recommended):
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-3. Download the dataset:
-   * Download the FER2013 dataset from Kaggle: [FER2013 Dataset](https://www.kaggle.com/datasets/msambare/fer2013)
-   * Extract the dataset and prepare it for training
+3. Install the required dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Project Structure
-```
-emotion-detection/
-├── main.py                    # Main application file
-├── train_model.py            # Model training script
-├── test_model.py            # Model evaluation script
-├── model/
-│   └── emotion_recognition_model_final.h5
-└── README.md
-```
+4. Download the pre-trained model or train your own (see Training section).
+
+### Chrome Extension Setup
+
+1. Open Chrome and navigate to `chrome://extensions/`
+2. Enable "Developer mode" (toggle in the top right)
+3. Click "Load unpacked" and select the `extension` folder from the repository
+4. The "EngageAI" extension should now appear in your extensions list
 
 ## Usage
 
-### Real-time Detection
-1. Run the main application:
+### Standalone Application
+
+Launch the real-time emotion detection with your webcam:
+
 ```bash
 python main.py
 ```
-2. Press 'f' to exit the application
 
-### Training
-To train your own model:
+This will open a window showing the video feed with emotion detection and engagement analysis overlaid.
+
+### API Server
+
+Start the Flask server for web application and Chrome extension integration:
+
 ```bash
-python train_model.py
-```
-Note: Requires the FER2013 dataset to be properly set up.
-
-### Model Evaluation
-To evaluate the model's performance:
-```bash
-python test_model.py
-```
-This will generate:
-* Confusion matrix visualization
-* Detailed classification report
-* Performance metrics for each emotion
-
-## Model Architecture
-The emotion detection model uses a CNN architecture:
-* 4 Convolutional layers with max-pooling and dropout
-* Dense layers for classification
-* Trained on grayscale images (48x48 pixels)
-* Evaluated using confusion matrix and classification metrics
-
-## Configuration Options
-You can modify these parameters in `main.py`:
-```python
-# Camera resolution
-cap.set(3, 640)  # Width
-cap.set(4, 480)  # Height
-
-# Face detection confidence
-min_detection_confidence=0.5
-
-# Mesh overlay opacity
-cv2.addWeighted(overlay, 0.3, img, 0.7, 0)  # 0.3 = 30% opacity
+python server.py
 ```
 
-## Troubleshooting
-1. **No webcam detected**:
-   * Ensure your webcam is properly connected
-   * Try changing `cv2.VideoCapture(0)` to `cv2.VideoCapture(1)` if you have multiple cameras
+The server will be available at `http://localhost:5000` with the following endpoints:
+- `POST /analyze`: Analyze a frame for emotions and engagement
+- `GET /status`: Check server status and model availability
 
-2. **Model not found error**:
-   * Verify that `emotion_recognition_model_final.h5` is in the `model/` directory
+### Chrome Extension (EngageAI)
 
-3. **Low performance**:
-   * Reduce camera resolution
-   * Ensure no other applications are using the webcam
+The EngageAI extension is designed to work with popular video conferencing platforms:
+- Google Meet
+- Zoom
+- Microsoft Teams
+- Webex
 
-4. **Training errors**:
-   * Verify FER2013 dataset is properly extracted and structured
-   * Ensure all emotion categories are present in the dataset
+To use the extension:
 
-## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+1. Make sure the Python server is running (`python server.py`)
+2. Click the EngageAI extension icon in your browser toolbar
+3. Click "Activate" in the popup
+4. Join your video meeting, and the extension will automatically analyze engagement
 
-## Acknowledgments
-* FER2013 dataset from Kaggle
-* MediaPipe for the face mesh implementation
-* TensorFlow for the deep learning framework
-* OpenCV for computer vision capabilities
-* scikit-learn for model evaluation metrics
+The extension will display:
+- Current detected emotion
+- Emotion score
+- Engagement level (Fully Engaged, Partially Engaged, Not Engaged)
 
-## Author
-Your Name
-* GitHub: @yourusername
-* Email: your.email@example.com
+## API Reference
+
+### POST /analyze
+
+Analyzes a single image frame for emotions and engagement metrics.
+
+**Request Body:**
+```json
+{
+  "frame": "base64-encoded-image-data"
+}
+```
+
+**Response:**
+```json
+{
+  "faces": [
+    {
+      "emotion": "Happy",
+      "emotion_score": 1.0,
+      "smile_score": 1.0,
+      "head_score": 0.6,
+      "gaze_score": 1.0,
+      "engagement_score": 0.88,
+      "engagement_level": "Fully Engaged",
+      "bounding_box": {
+        "x": 120,
+        "y": 80,
+        "width": 200,
+        "height": 200
+      }
+    }
+  ]
+}
+```
+
+### GET /status
+
+Checks if the server and model are running properly.
+
+**Response:**
+```json
+{
+  "status": "running",
+  "model_loaded": true,
+  "analyzer_ready": true
+}
+```
+
+## Training
+
+To train your own emotion recognition model:
+
+1. Prepare your dataset in the following structure:
+   ```
+   data/
+   ├── train/
+   │   ├── Angry/
+   │   ├── Disgusted/
+   │   ├── Fearful/
+   │   ├── Happy/
+   │   ├── Neutral/
+   │   ├── Sad/
+   │   └── Surprised/
+   ├── validation/
+   │   └── (same structure as train)
+   └── test/
+       └── (same structure as train)
+   ```
+
+2. Run the training script:
+   ```bash
+   python train_model.py
+   ```
+
+3. Evaluate the model performance:
+   ```bash
+   python test_model.py
+   ```
+
+## Engagement Metrics
+
+The system calculates engagement based on four key metrics with the following weights:
+
+- **Emotion Score (30%)**: Weighted values assigned to different emotions
+- **Smile Detection (10%)**: Whether the user is smiling
+- **Head Position (40%)**: Whether the head is stable or tilted
+- **Gaze Direction (20%)**: Whether the user is looking directly at the camera
+
+The final engagement level is classified as:
+- **Fully Engaged**: Score > 59.9%
+- **Partially Engaged**: Score between 49.9% and 59.9%
+- **Not Engaged**: Score < 49.9%
+
+## Project Structure
+
+```
+Real-Time-Emotion-Detection/
+├── data/                  # Training data (not included in repo)
+├── extension/             # Chrome extension files
+│   ├── background.js      # Extension background service worker
+│   ├── content.js         # Content script for video analysis
+│   ├── manifest.json      # Extension manifest
+│   ├── icons/             # Extension icons
+│   └── popup/             # Extension popup interface
+│       ├── popup.html     # Popup HTML interface
+│       ├── popup.css      # Popup styles
+│       └── popup.js       # Popup functionality
+├── model/                 # Pre-trained emotion recognition model
+├── emotion_score.py       # Emotion scoring utilities
+├── main.py                # Main application for webcam analysis
+├── server.py              # Flask API server
+├── test_model.py          # Script to evaluate model performance
+├── train_model.py         # Script to train the model
+├── LICENSE.md             # MIT License
+└── README.md              # Project documentation
+```
+
+## Chrome Extension Details
+
+The "EngageAI" Chrome extension includes:
+
+- **Background Service**: Handles extension state management and icon updates
+- **Content Script**: Processes video frames and communicates with the Flask server
+- **Popup Interface**: User-friendly controls and real-time metrics display
+- **Permissions**:
+  - `activeTab`: To access the current tab's content
+  - `storage`: To save extension settings
+  - `nativeMessaging`: For communication with the local server
+  - `scripting`: For injecting content scripts
+
+The extension specifically targets video conferencing platforms and provides real-time feedback through an overlay display during meetings.
+
+## Facial Landmarks
+
+The system uses MediaPipe's face mesh to detect 468 facial landmarks. Key landmark points used include:
+
+- **Mouth**: Points 61, 291, 13, 14 for smile detection
+- **Eyebrows**: Points 159, 145 for expression analysis
+- **Eyes**: Points 33, 143, 159, 145, 362, 263, 386, 374 for gaze tracking
+- **Face**: Points 4, 152 for head position analysis
 
 ## Contributing
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-Remember to star ⭐ this repository if you found it helpful!
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
+
+## Acknowledgments
+
+- FER2013 dataset for emotion recognition training
+- MediaPipe team for face mesh implementation
+- TensorFlow team for deep learning framework
+- Chrome Extensions API developers
