@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Engagement Analyzer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Engagement Analyzer</h1>
+    <div class="status-container">
+      <div class="status-indicator" id="status-indicator"></div>
+      <span id="status-text">Inactive</span>
+    </div>
+    <div class="controls">
+      <button id="toggle-btn">Activate</button>
+      <button id="settings-btn">Settings</button>
+    </div>
+    <div class="stats" id="stats">
+      <div class="stat">
+        <label>Current Emotion:</label>
+        <span id="current-emotion">-</span>
+      </div>
+      <div class="stat">
+        <label>Emotion Score:</label>
+        <span id="emotion-score">-</span>
+      </div>
+      <div class="stat">
+        <label>Engagement Level:</label>
+        <span id="engagement-level">-</span>
+      </div>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
